@@ -1,0 +1,28 @@
+{
+	"version": "0.2.0",
+	"configurations": [{
+		"type": "node",
+		"request": "launch",
+		"name": "Debug",
+		"runtimeArgs": [
+			"node/src/lib/index.js"
+		],
+		"envFile": "${workspaceRoot}/node/local.run.properties"
+	}, {
+		"type": "node",
+		"request": "launch",
+		"name": "Debug Tests",
+		"program": "${workspaceRoot}/node/node_modules/mocha/bin/_mocha",
+		"args": [
+			"-u",
+			"tdd",
+			"--timeout",
+			"999999",
+			"--colors",
+			"--recursive",
+			"${workspaceRoot}/src/spec"
+		],
+		"internalConsoleOptions": "openOnSessionStart",
+		"envFile": "${workspaceRoot}/src/local.test.properties"
+	}]
+}
