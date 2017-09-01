@@ -1,0 +1,6 @@
+local.run.properties
+node_modules
+npm-debug.log
+.nyc_output
+coverage
+.env
