@@ -13,5 +13,5 @@ Repository Structure
 ---
 * This repository has 2 distinct components
     * [apex](/node): The Force.com component of the application
-    * [node](/node): The Heroku component of the application
+    * [heroku](/heroku): The Heroku component of the application
 * This simplification allows developers to see and use the entire application in one place. However, for Production we would recommend you instead use small, single-purpose repositories.
