@@ -58,7 +58,7 @@
     <fields>
         <fullName>Index__c</fullName>
         <externalId>false</externalId>
-        <label>Ordinal</label>
+        <label>Index</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
