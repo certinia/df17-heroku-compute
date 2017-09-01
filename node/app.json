@@ -1,0 +1,9 @@
+{
+	"name": "ffdc-df17-heroku-compute",
+	"scripts": {},
+	"formation": {},
+	"addons": [],
+	"buildpacks": [{
+		"url": "heroku/nodejs"
+	}]
+}

@@ -1,0 +1,48 @@
+{
+	"name": "ffdc-df17-heroku-compute",
+	"version": "0.0.0",
+	"description": "Node component of Force.com-Heroku App",
+	"scripts": {
+		"pretest": "eslint src",
+		"test": "nyc mocha --recursive src/spec"
+	},
+	"main": "src/lib/index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/financialforcedev/df17-heroku-compute"
+	},
+	"keywords": [],
+	"author": "FinancialForce.com",
+	"license": "ISC",
+	"dependencies": {},
+	"devDependencies": {
+		"app-root-path": "2.0.1",
+		"chai": "4.1.1",
+		"eslint": "4.5.0",
+		"mocha": "3.5.0",
+		"nyc": "11.1.0",
+		"sinon": "3.2.1"
+	},
+	"engines": {
+		"node": "6.11.2"
+	},
+	"nyc": {
+		"check-coverage": true,
+		"per-file": true,
+		"lines": 100,
+		"statements": 100,
+		"functions": 100,
+		"branches": 100,
+		"include": [
+			"src"
+		],
+		"reporter": [
+			"lcov",
+			"html",
+			"text",
+			"text-summary"
+		],
+		"cache": true,
+		"all": true
+	}
+}
