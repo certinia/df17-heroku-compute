@@ -5,6 +5,10 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Primes</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
         <members>unfiled$public/PrimesSummary</members>
         <name>Report</name>
     </types>
