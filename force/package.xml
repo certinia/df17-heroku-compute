@@ -5,6 +5,10 @@
         <members>Prime__c</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>Primes</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
 	<types>
 		<members>PrimesController</members>
 		<members>PrimesControllerTest</members>
