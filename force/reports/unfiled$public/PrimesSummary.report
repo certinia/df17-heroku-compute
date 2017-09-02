@@ -9,7 +9,7 @@
             <axisBinding>y</axisBinding>
             <column>Prime__c.Value__c</column>
         </chartSummaries>
-        <chartType>HorizontalBar</chartType>
+        <chartType>Line</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>true</expandOthers>
         <groupingColumn>Prime__c.Index__c</groupingColumn>
