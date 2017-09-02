@@ -5,5 +5,13 @@
         <members>Prime__c</members>
         <name>CustomObject</name>
     </types>
+	<types>
+		<members>PrimesController</members>
+		<members>PrimesControllerTest</members>
+		<members>PrimeSelector</members>
+		<members>PrimeSelectorTest</members>
+		<members>StubProvider</members>
+		<name>ApexClass</name>
+	</types>
     <version>40.0</version>
 </Package>
