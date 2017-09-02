@@ -25,5 +25,9 @@
         <members>Prime__c</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>unfiled$public/PrimesSummary</members>
+        <name>Report</name>
+    </types>
     <version>40.0</version>
 </Package>
