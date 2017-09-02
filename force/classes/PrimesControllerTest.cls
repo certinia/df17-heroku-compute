@@ -13,8 +13,8 @@ private class PrimesControllerTest
 		PrimeSelector.instance = selector;
 
 		Prime__c[] expected = new Prime__c[]{
-			new Prime__c(Index__c = 2, Value__c = '3'),
-			new Prime__c(Index__c = 1, Value__c = '2')
+			new Prime__c(Index__c = 2, Value__c = 3),
+			new Prime__c(Index__c = 1, Value__c = 2)
 		};
 
 		mocks.stub(selector, 'selectTop', new Type[]{Integer.class}, expected);

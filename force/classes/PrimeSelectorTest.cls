@@ -51,9 +51,9 @@ private class PrimeSelectorTest
 	{
 		// given
 		insert new Prime__c[]{
-			new Prime__c(Index__c = 2, Value__c = '3'),
-			new Prime__c(Index__c = 1, Value__c = '2'),
-			new Prime__c(Index__c = 3, Value__c = '5')
+			new Prime__c(Index__c = 2, Value__c = 3),
+			new Prime__c(Index__c = 1, Value__c = 2),
+			new Prime__c(Index__c = 3, Value__c = 5)
 		};
 
 		PrimeSelector selector = new PrimeSelector();
@@ -68,9 +68,9 @@ private class PrimeSelectorTest
 		System.assertEquals(2, actual.size(), 'Unexpected result size: ' + actual);
 		
 		System.assertEquals(3, actual[0].Index__c, 'Unexpected actual[0].Index__c - results: ' + actual);
-		System.assertEquals('5', actual[0].Value__c, 'Unexpected actual[0].Value__c - results: ' + actual);
+		System.assertEquals(5, actual[0].Value__c, 'Unexpected actual[0].Value__c - results: ' + actual);
 
 		System.assertEquals(2, actual[1].Index__c, 'Unexpected actual[1].Index__c - results: ' + actual);
-		System.assertEquals('3', actual[1].Value__c, 'Unexpected actual[1].Value__c - results: ' + actual);
+		System.assertEquals(3, actual[1].Value__c, 'Unexpected actual[1].Value__c - results: ' + actual);
 	}
 }
