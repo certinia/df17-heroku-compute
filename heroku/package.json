@@ -6,7 +6,7 @@
 		"pretest": "eslint src",
 		"test": "nyc mocha --recursive src/spec"
 	},
-	"main": "src/lib/index.js",
+	"main": "src/lib/web.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/financialforcedev/df17-heroku-compute"
@@ -14,7 +14,16 @@
 	"keywords": [],
 	"author": "FinancialForce.com",
 	"license": "ISC",
-	"dependencies": {},
+	"dependencies": {
+		"body-parser": "1.18.0",
+		"cluster": "0.7.7",
+		"config": "1.26.2",
+		"debug": "3.0.1",
+		"debug-plus": "1.2.2",
+		"express": "4.15.4",
+		"helmet": "3.8.1",
+		"lodash": "4.17.4"
+	},
 	"devDependencies": {
 		"app-root-path": "2.0.1",
 		"chai": "4.1.1",

@@ -5,14 +5,14 @@
 		"request": "launch",
 		"name": "Debug",
 		"runtimeArgs": [
-			"node/src/lib/index.js"
+			"heroku/src/lib/web.js"
 		],
-		"envFile": "${workspaceRoot}/node/local.run.properties"
+		"envFile": "${workspaceRoot}/heroku/run.properties"
 	}, {
 		"type": "node",
 		"request": "launch",
 		"name": "Debug Tests",
-		"program": "${workspaceRoot}/node/node_modules/mocha/bin/_mocha",
+		"program": "${workspaceRoot}/heroku/node_modules/mocha/bin/_mocha",
 		"args": [
 			"-u",
 			"tdd",
@@ -20,9 +20,9 @@
 			"999999",
 			"--colors",
 			"--recursive",
-			"${workspaceRoot}/src/spec"
+			"${workspaceRoot}/heroku/src/spec"
 		],
 		"internalConsoleOptions": "openOnSessionStart",
-		"envFile": "${workspaceRoot}/src/local.test.properties"
+		"envFile": "${workspaceRoot}/heroku/test.properties"
 	}]
 }
