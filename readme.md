@@ -1,7 +1,7 @@
 ffdc-df17-heroku-compute
 ===
 
-This repo accompanies the Dreamforce '17 session **Beat Governor Limits By Taking Your Compute Processes to Heroku**.
+This repo accompanies the Dreamforce '17 session **[Beat Governor Limits By Taking Your Compute Processes to Heroku](https://success.salesforce.com/Sessions#/session/a2q3A000001yuLtQAI)**.
 
 It is optimized for development in VisualStudio Code.
 
