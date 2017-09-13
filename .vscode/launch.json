@@ -3,9 +3,17 @@
 	"configurations": [{
 		"type": "node",
 		"request": "launch",
-		"name": "Debug",
+		"name": "Debug web",
 		"runtimeArgs": [
 			"heroku/src/lib/web.js"
+		],
+		"envFile": "${workspaceRoot}/heroku/run.properties"
+	}, {
+		"type": "node",
+		"request": "launch",
+		"name": "Debug worker",
+		"runtimeArgs": [
+			"heroku/src/lib/worker.js"
 		],
 		"envFile": "${workspaceRoot}/heroku/run.properties"
 	}, {
