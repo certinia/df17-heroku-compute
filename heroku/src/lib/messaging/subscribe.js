@@ -1,20 +1,11 @@
 'use strict';
 
 const
-	debug = require('debug-plus')('df17~heroku~compute:messaging:subscribe'),
-	{ createChannel } = require('./shared/channel'),
-
+	amqp = require('../service/amqp'),
 	subscribe = (topic, handler) => {
-		let closeMe;
-		return createChannel()
-			.then(({ connection, channel }) => {
-				closeMe = connection;
-				channel.consume(topic, handler);
-			})
-			.catch(error => {
-				debug('Subscribe error: %s', error.message);
-			})
-			.then(() => closeMe.close());
+		return amqp.apply(channel => {
+			channel.consume(topic, handler);
+		});
 	};
 
 module.exports = {

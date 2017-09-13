@@ -4,6 +4,6 @@ const
 	primes = require('./service/primes'),
 	{ subscribe } = require('./messaging/subscribe'),
 
-	CREATE_PRIMES_TOPIC = 'CREATE_PRIMES';
+	{ PRIMES_REQUESTED } = require('./messaging/topics');
 
-subscribe(CREATE_PRIMES_TOPIC, primes.handle);
+subscribe(PRIMES_REQUESTED, primes.handle);
