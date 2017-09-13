@@ -15,13 +15,15 @@
 	"author": "FinancialForce.com",
 	"license": "ISC",
 	"dependencies": {
+		"amqplib": "0.5.1",
+		"bluebird": "3.5.0",
 		"body-parser": "1.18.0",
 		"cluster": "0.7.7",
 		"config": "1.26.2",
-		"debug": "3.0.1",
 		"debug-plus": "1.2.2",
 		"express": "4.15.4",
 		"helmet": "3.8.1",
+		"is-prime": "1.0.1",
 		"lodash": "4.17.4"
 	},
 	"devDependencies": {

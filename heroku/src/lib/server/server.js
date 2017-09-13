@@ -1,46 +1,34 @@
 'use strict';
 
 const
-	_ = require('lodash'),
 	bodyParser = require('body-parser'),
 	debug = require('debug-plus')('df17~heroku~compute:server:server'),
 	express = require('express'),
 	helmet = require('helmet'),
 
-	Primes = require('../service/primes'),
+	primesRoute = require('./routes/primes'),
 
-	PRIMES_URI = '/primes',
-	PORT = process.env.PORT || 8080,
-
-	server = express(),
-
-	primesHandler = (request, response) => {
-		const
-			body = request.body || {},
-			currentMax = body.currentMax,
-			count = body.count;
-
-		debug('Handling request with body %s', JSON.stringify(body));
-
-		if (currentMax && count) {
-			Primes.handle({ currentMax, count });
-			response.sendStatus(200);
-		} else {
-			response.sendStatus(400);
-		}
-	};
+	PORT = process.env.PORT || 8080;
 
 class Server {
 
 	static init() {
-		server.use(bodyParser.json());
-		server.use(helmet());
 
-		server.post(PRIMES_URI, primesHandler);
+		const app = express();
 
-		// start server
+		// Reads request.body
+		app.use(bodyParser.json());
+
+		// Sets various HTTP headers that make the response
+		// more secure
+		app.use(helmet());
+
+		// Adds "/primes" route
+		primesRoute(app);
+
+		// Start server
 		debug('server listening on port: %s', PORT);
-		server.listen(PORT);
+		app.listen(PORT);
 	}
 
 }
