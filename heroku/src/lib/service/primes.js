@@ -6,8 +6,12 @@ const
 
 class Primes {
 
-	static handle({ currentMax, count }) {
-		const result = [];
+	static handle(message) {
+		const
+			content = message.content,
+			[currentMax, count] = content,
+			result = [];
+
 		let i = currentMax;
 
 		debug('CurrentMax: %s, Count: %s', currentMax, count);

@@ -6,4 +6,4 @@ const
 
 	{ PRIMES_REQUESTED } = require('./messaging/topics');
 
-subscribe(PRIMES_REQUESTED, primes.handle);
+subscribe(PRIMES_REQUESTED, primes.handle.bind(primes));

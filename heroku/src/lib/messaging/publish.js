@@ -1,7 +1,12 @@
 'use strict';
 
 const
-	amqp = require('../service/amqp'),
+	Amqp = require('../service/amqp'),
+
+	amqp = new Amqp({
+		closeConnection: true
+	}),
+
 	publish = (topic, message) => {
 		return amqp.apply(channel => {
 			channel.sendToQueue(topic, Buffer.from(message));

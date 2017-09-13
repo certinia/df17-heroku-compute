@@ -1,10 +1,18 @@
 'use strict';
 
 const
-	amqp = require('../service/amqp'),
+	Amqp = require('../service/amqp'),
+
+	amqp = new Amqp({
+		closeConnection: false
+	}),
+
 	subscribe = (topic, handler) => {
 		return amqp.apply(channel => {
-			channel.consume(topic, handler);
+			channel.assertQueue(topic);
+			channel.consume(topic, message => {
+				handler(message);
+			});
 		});
 	};
 

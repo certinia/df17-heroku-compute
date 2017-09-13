@@ -21,8 +21,10 @@ module.exports = app => {
 				if (!_.isNumber(body.count)) {
 					throw new Error('Missing required parameter: count');
 				}
+
+				return [body.currentMax, body.count];
 			})
-			.then(() => publish(PRIMES_REQUESTED, body))
+			.then(message => publish(PRIMES_REQUESTED, message))
 			.then(publishResult => response.json(publishResult))
 			.catch(error => response.status(400).send(error.message));
 	});
