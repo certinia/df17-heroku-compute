@@ -24,6 +24,8 @@ class Primes {
 				debug('Found prime: %s', i);
 
 				// Create a new Prime__c
+				// TODO: Work out Index__c also.
+				// TODO: Use a generator function
 				records.push({ Value__c: i }); // eslint-disable-line camelcase
 			}
 		}
