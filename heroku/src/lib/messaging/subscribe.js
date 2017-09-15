@@ -4,20 +4,34 @@ const
 	Amqp = require('../service/amqp'),
 	debug = require('debug-plus')('df17~heroku~compute:messaging:subscribe'),
 
-	subscribe = (topic, handler) => {
-		return Amqp.apply(channel => {
-			channel.assertQueue(topic);
-			channel.consume(topic, message => {
-				return Promise.resolve(message)
-					.then(handler)
-					.catch(error => {
-						debug('Error: %s', error.message);
-					})
-					.then(() => channel.ack(message));
-			});
+	subscribeAction = ({ topic, handler, channel }) => {
+		// Ensure the topic exists
+		channel.assertQueue(topic);
+
+		// Subscribe to the topic
+		channel.consume(topic, message => {
+			return Promise.resolve()
+				.then(() => {
+					// Invoke the handler with the message
+					return handler(message);
+				})
+				.catch(error => {
+					// Log any errors
+					debug('Error: %s', error.message);
+				})
+				.then(() => {
+					// Acknowledge the event, regardless
+					// of whether or not we had an error
+					channel.ack(message);
+				});
 		});
 	};
 
-module.exports = {
-	subscribe
-};
+class Subscriber {
+	static subscribe(topic, handler) {
+		// Opens a connection to the RabbitMQ server, and subscribes to the topic
+		return Amqp.apply(channel => subscribeAction({ topic, handler, channel }));
+	}
+}
+
+module.exports = Subscriber;

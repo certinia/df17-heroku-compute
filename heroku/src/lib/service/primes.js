@@ -6,32 +6,32 @@ const
 	SalesforceWriter = require('./salesforceWriter');
 
 class Primes {
-
 	static handle(message) {
 		const
+			// Read the parameters from the message
 			content = message.content,
-			{ currentMax, count, salesforceSession, instanceUrl } = JSON.parse(content),
+			{ currentMax, count, accessToken, instanceUrl } = JSON.parse(content),
 			records = [],
-			recordsByType = {
-				Prime__c: records // eslint-disable-line camelcase
-			};
+			recordsByType = { Prime__c: records }; // eslint-disable-line camelcase
 
+		// Just iterate through each number greater than the currentMax,
+		// adding each newly discovered Prime number until we have enough
 		let i = currentMax;
 		while (records.length < count) {
 			i++;
+			// Check primality
 			if (isPrime(i)) {
 				debug('Found prime: %s', i);
-				records.push({
-					Value__c: i // eslint-disable-line camelcase
-				});
+
+				// Create a new Prime__c
+				records.push({ Value__c: i }); // eslint-disable-line camelcase
 			}
 		}
 
-		SalesforceWriter.insert({
-			instanceUrl,
-			recordsByType,
-			salesforceSession
-		});
+		// If there are any Primes, save them in Force.com
+		if (records.length) {
+			SalesforceWriter.insert({ accessToken, instanceUrl, recordsByType });
+		}
 	}
 
 }
