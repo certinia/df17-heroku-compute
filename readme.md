@@ -7,7 +7,11 @@ It is optimized for development in VisualStudio Code.
 
 Getting Started
 ---
-See the [wiki](https://github.com/financialforcedev/df17-heroku-compute/wiki/Getting-Started) for deployment instructions.
+See the [wiki](https://github.com/financialforcedev/df17-heroku-compute/wiki/Getting-Started) for local development and deployment instructions.
+
+Architecture
+---
+![Architecture](docs/readme/df17-heroku-compute-architecture.gif)
 
 Repository Structure
 ---
@@ -15,9 +19,3 @@ Repository Structure
     * [force](/force): The Force.com component of the application
     * [heroku](/heroku): The Heroku component of the application
 * This simplification allows developers to see and use the entire application in one place. However, for Production we would recommend you instead use small, single-purpose repositories.
-
-RabbitMQ
----
-This app uses RabbitMQ.
-To run locally, you will need a RabbitMQ server running locally on the default port of 5672.
-See the [RabbitMQ documentation](https://www.rabbitmq.com/download.html) for instructions on installing and running RabbitMQ.
