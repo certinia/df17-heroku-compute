@@ -1,7 +1,7 @@
 public class HerokuConnector
 {
 	@TestVisible
-	private HerokuConnector instance = null;
+	private static HerokuConnector instance = null;
 
 	public static HerokuConnector newInstance()
 	{
@@ -18,12 +18,12 @@ public class HerokuConnector
 		Http http = new Http();
  
 	    HttpRequest request = createRequest();
-		populateHeader();
-		populateBody(count, currentMax);
+		populateHeader(request);
+		populateBody(request, count, currentMax);
         return http.send(request);
 	}
 
-	private static createRequest()
+	private static HttpRequest createRequest()
 	{
 		HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:HerokuPrimes/primes');
@@ -31,17 +31,17 @@ public class HerokuConnector
 		return request;
 	}
 
-	private static populateHeader(HttpRequest request)
+	private static void populateHeader(HttpRequest request)
 	{
 		request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         request.setHeader('Referer', Url.getSalesforceBaseUrl().toExternalForm());
         request.setHeader('Content-Type', 'application/json');
 	}
 
-	private static populateBody(HttpRequest request, Integer count, Integer currentMax)
+	private static void populateBody(HttpRequest request, Integer count, Integer currentMax)
 	{
 		Map<String, Object> body = new Map<String, Object>{
-            'currentMax' => 10,
+            'currentMax' => currentMax,
             'count' => count
         };
         request.setBody(JSON.serialize(body));       
