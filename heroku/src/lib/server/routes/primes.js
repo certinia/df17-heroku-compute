@@ -2,30 +2,53 @@
 
 const
 	_ = require('lodash'),
-	{ publish } = require('../../messaging/publish'),
+	debug = require('debug-plus')('df17~heroku~compute:server:routes:primes'),
+	Publisher = require('../../messaging/publisher'),
 
 	{ PRIMES_REQUESTED } = require('../../messaging/topics'),
-	PRIMES_URI = '/primes';
+	PRIMES_URI = '/primes',
+	REQUIRED_PROPERTIES = ['currentMax', 'count', 'accessToken', 'instanceUrl'],
 
-module.exports = app => {
-	app.post(PRIMES_URI, (request, response) => {
+	requestHandler = (request, response) => {
 		const body = request.body || {};
 
 		Promise
 			.resolve()
 			.then(() => {
-				if (!_.isNumber(body.currentMax)) {
-					throw new Error('Missing required parameter: currentMax');
-				}
+				// Validate the request body has the expected properties
+				_.each(REQUIRED_PROPERTIES, property => {
+					if (!body[property]) {
+						throw new Error(`Missing required parameter: ${property}`);
+					}
+				});
 
-				if (!_.isNumber(body.count)) {
-					throw new Error('Missing required parameter: count');
-				}
-
-				return [body.currentMax, body.count];
+				// Create a message by converting the body into a JSON String
+				return JSON.stringify(_.pick(body, REQUIRED_PROPERTIES));
 			})
-			.then(message => publish(PRIMES_REQUESTED, message))
-			.then(publishResult => response.json(publishResult))
-			.catch(error => response.status(400).send(error.message));
-	});
-};
+			.then(message => {
+				// Publish the message
+				return Publisher.publish(PRIMES_REQUESTED, message);
+			})
+			.then(() => {
+				// Send a success response
+				response.sendStatus(200);
+			})
+			.catch(error => {
+				const errorMessage = error.message;
+
+				// Log the error
+				debug.error(errorMessage);
+
+				// Send an error response
+				response.status(400).send(errorMessage);
+			});
+	};
+
+class Primes {
+	static addRoute(app) {
+		// Add "/primes" route
+		app.post(PRIMES_URI, requestHandler);
+	}
+}
+
+module.exports = Primes;

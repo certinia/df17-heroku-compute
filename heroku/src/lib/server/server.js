@@ -6,16 +6,14 @@ const
 	express = require('express'),
 	helmet = require('helmet'),
 
-	auth = require('./middleware/auth'),
+	Auth = require('./middleware/auth'),
 
-	primesRoute = require('./routes/primes'),
+	Primes = require('./routes/primes'),
 
 	PORT = process.env.PORT || 8080;
 
 class Server {
-
 	static init() {
-
 		const app = express();
 
 		// Reads request.body
@@ -25,17 +23,17 @@ class Server {
 		// more secure
 		app.use(helmet());
 
-		// Checks authentication header, returns 401 if header not set
-		app.use(auth.middleware);
+		// Ensures header contains Salesforce org details
+		// so we can send the response back to the correct org
+		app.use(Auth.middleware);
 
 		// Adds "/primes" route
-		primesRoute(app);
+		Primes.addRoute(app);
 
 		// Start server
 		debug('server listening on port: %s', PORT);
 		app.listen(PORT);
 	}
-
 }
 
 module.exports = Server;

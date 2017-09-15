@@ -3,18 +3,28 @@
 const
 	_ = require('lodash'),
 
-	AUTH_HEADER = 'headers.authorization',
+	HEADER_AUTHORIZATION = 'headers.authorization',
+	HEADER_REFERER = 'headers.referer',
 	BEARER_PREFIX = 'Bearer ',
-	SALESFORCE_SESSION = 'body.salesforceSession';
+	ACCESS_TOKEN = 'body.accessToken',
+	INSTANCE_URL = 'body.instanceUrl';
 
-function middleware(request, response, next) {
-	const token = _.trimStart(_.get(request, AUTH_HEADER), BEARER_PREFIX);
-	if (_.size(token)) {
-		_.set(request, SALESFORCE_SESSION, token);
-		next();
-	} else {
-		response.sendStatus(401);
+class Auth {
+	static middleware(request, response, next) {
+		const
+			instanceUrl = _.get(request, HEADER_REFERER),
+			accessToken = _.trimStart(_.get(request, HEADER_AUTHORIZATION), BEARER_PREFIX);
+
+		if (instanceUrl && accessToken) {
+			// Copy the instanceUrl and accessToken into the body
+			_.set(request, ACCESS_TOKEN, accessToken);
+			_.set(request, INSTANCE_URL, instanceUrl);
+			next();
+		} else {
+			// Send an error response (401 - unauthorized)
+			response.sendStatus(401);
+		}
 	}
 }
 
-module.exports = { middleware };
+module.exports = Auth;

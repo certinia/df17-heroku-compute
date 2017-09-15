@@ -2,5 +2,5 @@
 
 const Server = require('./server/server');
 
-// Brings up the express web server
+// Start the server
 Server.init();

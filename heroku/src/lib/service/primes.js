@@ -2,30 +2,36 @@
 
 const
 	debug = require('debug-plus')('df17~heroku~compute:service:primes'),
-	isPrime = require('is-prime');
+	isPrime = require('is-prime'),
+	SalesforceWriter = require('./salesforceWriter');
 
 class Primes {
 
 	static handle(message) {
 		const
 			content = message.content,
-			[currentMax, count] = content,
-			result = [];
+			{ currentMax, count, salesforceSession, instanceUrl } = JSON.parse(content),
+			records = [],
+			recordsByType = {
+				Prime__c: records // eslint-disable-line camelcase
+			};
 
 		let i = currentMax;
-
-		debug('CurrentMax: %s, Count: %s', currentMax, count);
-
-		while (result.length < count) {
+		while (records.length < count) {
 			i++;
 			if (isPrime(i)) {
 				debug('Found prime: %s', i);
-				result.push(i);
+				records.push({
+					Value__c: i // eslint-disable-line camelcase
+				});
 			}
 		}
 
-		debug(result);
-		return result;
+		SalesforceWriter.insert({
+			instanceUrl,
+			recordsByType,
+			salesforceSession
+		});
 	}
 
 }
