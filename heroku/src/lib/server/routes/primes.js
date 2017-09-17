@@ -12,7 +12,7 @@ const
 	requestHandler = (request, response) => {
 		const body = request.body || {};
 
-		Promise
+		return Promise
 			.resolve()
 			.then(() => {
 				// Validate the request body has the expected properties
@@ -47,7 +47,7 @@ const
 class Primes {
 	static addRoute(app) {
 		// Add "/primes" route
-		app.post(PRIMES_URI, requestHandler);
+		return app.post(PRIMES_URI, requestHandler);
 	}
 }
 
