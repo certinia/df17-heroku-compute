@@ -15,7 +15,7 @@ const
 
 chai.use(chaiSinon);
 
-describe('server/routes/primes', () => {
+describe('server/middleware/auth', () => {
 
 	beforeEach(() => {
 		mocks.next = sandbox.stub();
