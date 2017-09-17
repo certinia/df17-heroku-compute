@@ -6,7 +6,7 @@ const
 	publishAction = ({ topic, message, channel }) => {
 		return Amqp.apply(channel => {
 			// Convert the message into a Buffer and enqueue against the topic
-			channel.sendToQueue(topic, Buffer.from(message));
+			return channel.sendToQueue(topic, Buffer.from(message));
 		});
 	};
 
