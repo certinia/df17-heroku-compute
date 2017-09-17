@@ -9,7 +9,7 @@ const
 		channel.assertQueue(topic);
 
 		// Subscribe to the topic
-		channel.consume(topic, message => {
+		return channel.consume(topic, message => {
 			return Promise.resolve()
 				.then(() => {
 					// Invoke the handler with the message
