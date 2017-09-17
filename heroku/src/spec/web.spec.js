@@ -2,7 +2,7 @@
 
 const
 	chai = require('chai'),
-	sinonChai = require('sinon-chai'),
+	chaiSinon = require('chai-sinon'),
 	sinon = require('sinon'),
 	Server = require('../lib/server/server'),
 
@@ -11,7 +11,7 @@ const
 	sandbox = sinon.sandbox.create(),
 	expect = chai.expect;
 
-chai.use(sinonChai);
+chai.use(chaiSinon);
 
 describe('web', () => {
 	beforeEach(() => {
