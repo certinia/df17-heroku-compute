@@ -58,9 +58,7 @@ describe('server/server', () => {
 		let expressServer;
 
 		afterEach(() => {
-			if (expressServer && _.isFunction(expressServer.close)) {
-				expressServer.close();
-			}
+			_.result(expressServer, 'close');
 		});
 
 		it('should add Primes route', () => {

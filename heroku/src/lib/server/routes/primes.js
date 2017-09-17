@@ -10,7 +10,7 @@ const
 	REQUIRED_PROPERTIES = ['currentMax', 'count', 'accessToken', 'instanceUrl'],
 
 	requestHandler = (request, response) => {
-		const body = request.body || {};
+		const body = _.get(request, 'body', {});
 
 		return Promise
 			.resolve()
