@@ -124,5 +124,18 @@ describe('server/server', () => {
 					expect(response.headers).to.include.keys('x-frame-options', 'x-xss-protection');
 				});
 		});
+
+		it('should use 8080 if PORT is not supplied', () => {
+			// given
+			delete process.env.PORT;
+
+			// when
+			expressServer = Server.init();
+
+			// then
+			return request('http://localhost:8080')
+				.post('/test')
+				.expect(200);
+		});
 	});
 });
