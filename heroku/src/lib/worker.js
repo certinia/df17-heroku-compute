@@ -2,7 +2,7 @@
 
 const
 	primes = require('./service/primes'),
-	Subscriber = require('./messaging/subscribe'),
+	Subscriber = require('./messaging/subscriber'),
 
 	{ PRIMES_REQUESTED } = require('./messaging/topics');
 
