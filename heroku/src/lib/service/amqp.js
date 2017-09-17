@@ -4,8 +4,6 @@ const
 	amqp = require('amqplib'),
 	debug = require('debug-plus')('df17~heroku~compute:service:amqp'),
 
-	URL = process.env.CLOUDAMQP_URL || 'amqp://localhost',
-
 	logError = error => {
 		debug('Error: %s', error.message);
 	};
@@ -14,6 +12,8 @@ let connection;
 
 class Amqp {
 	static apply(action) {
+		const url = process.env.CLOUDAMQP_URL || 'amqp://localhost';
+
 		return Promise.resolve()
 			.then(() => {
 				// Use the connection if created earlier
@@ -23,7 +23,7 @@ class Amqp {
 				}
 
 				// Create a new RabbitMQ connection
-				return amqp.connect(URL)
+				return amqp.connect(url)
 					.then(newConnection => {
 						connection = newConnection;
 						return connection;
