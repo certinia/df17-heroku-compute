@@ -33,26 +33,25 @@ describe('messaging/publisher', () => {
 
 	describe('publish', () => {
 
-		describe('should call sendToQueue', () => {
+		it('should call sendToQueue', () => {
 
-			it('accessToken', () => {
-				// given
-				const
-					topic = 'TestTopic',
-					message = 'TestMessage';
+			// given
+			const
+				topic = 'TestTopic',
+				message = 'TestMessage';
 
-				mocks.Amqp.apply.callsFake(action => {
-					return Promise.resolve(action(mocks.channel));
-				});
-
-				// when
-				return Publisher.publish(topic, message)
-					// then
-					.then(() => {
-						expect(mocks.channel.sendToQueue).to.be.calledOnce;
-						expect(mocks.channel.sendToQueue).to.be.calledWith(topic, Buffer.from(message));
-					});
+			mocks.Amqp.apply.callsFake(action => {
+				return Promise.resolve(action(mocks.channel));
 			});
+
+			// when
+			return Publisher.publish(topic, message)
+				// then
+				.then(() => {
+					expect(mocks.channel.sendToQueue).to.be.calledOnce;
+					expect(mocks.channel.sendToQueue).to.be.calledWith(topic, Buffer.from(message));
+				});
 		});
+
 	});
 });
