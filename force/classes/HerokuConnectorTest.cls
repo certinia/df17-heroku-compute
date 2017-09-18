@@ -16,7 +16,7 @@ private class HerokuConnectorTest
 		System.assertEquals('Bearer ' + UserInfo.getSessionId(), mock.Request.getHeader('Authorization'));
 		System.assertEquals(Url.getSalesforceBaseUrl().toExternalForm(), mock.Request.getHeader('Referer'));
 		System.assertEquals('application/json', mock.Request.getHeader('Content-Type'));
-		System.assertEquals('{"count":1,"currentMax":2,"index":3}', mock.Request.getBody());
+		System.assertEquals('{"count":1,"index":3,"currentMax":2}', mock.Request.getBody());
 	}
 
 	private class CalloutMock implements HttpCalloutMock
