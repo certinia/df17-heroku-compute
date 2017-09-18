@@ -38,7 +38,7 @@ public class HerokuConnector
 
 	private static void populateHeader(HttpRequest request)
 	{
-		request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+		request.setHeader('Authorization', 'Bearer ' + getSessionId());
         request.setHeader('Referer', Url.getSalesforceBaseUrl().toExternalForm());
         request.setHeader('Content-Type', 'application/json');
 	}
@@ -51,5 +51,13 @@ public class HerokuConnector
             'count' => count
         };
         request.setBody(JSON.serialize(body));       
+	}
+    
+    private static String getSessionId()
+    {
+        //Strictly temporary hack to workaround the fact that
+        //Lightning Component sessions are not API enabled
+        //https://salesforce.stackexchange.com/questions/110515/getting-session-id-in-lightning
+        return Test.isRunningTest() ? UserInfo.getSessionId() : Page.SessionId.getContent().toString();
 	}
 }
