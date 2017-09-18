@@ -21,4 +21,8 @@
         <object>Prime__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <tabSettings>
+        <tab>Primes</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
 </PermissionSet>
