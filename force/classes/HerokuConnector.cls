@@ -19,7 +19,7 @@ public class HerokuConnector
  
 	    HttpRequest request = createRequest();
 		populateHeader(request);
-		populateBody(request, count, currentMax.Value__c, currentMax.Index__c);
+		populateBody(request, count, (Integer) currentMax.Value__c, (Integer) currentMax.Index__c);
         return http.send(request);
 	}
 
