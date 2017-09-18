@@ -16,10 +16,15 @@ public class HerokuConnector
 	public Object requestPrimes(Integer count, Prime__c currentMax)
     {            
 		Http http = new Http();
+        Integer index = 0, value = 0;
  
 	    HttpRequest request = createRequest();
 		populateHeader(request);
-		populateBody(request, count, (Integer) currentMax.Value__c, (Integer) currentMax.Index__c);
+        if (currentMax != null) {
+            index = (Integer) currentMax.Index__c;
+            value = (Integer) currentMax.Value__c;
+        }
+		populateBody(request, count, value, index);
         return http.send(request);
 	}
 
