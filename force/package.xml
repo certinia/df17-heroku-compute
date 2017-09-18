@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>HerokuConnector</members>
+        <members>HerokuConnectorTest</members>
+        <members>PrimesController</members>
+        <members>PrimesControllerTest</members>
+        <members>PrimeSelector</members>
+        <members>PrimeSelectorTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
         <members>Prime__c</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>HerokuPrimes</members>
+        <name>NamedCredential</name>
     </types>
     <types>
         <members>Primes</members>

@@ -434,9 +434,8 @@ module.exports = {
 			mocha: true
 		},
 		rules: {
-			'max-statements': ['warn', {
-				max: 50
-			}]
+			// Disallow usage of expressions in statement position
+			'no-unused-expressions': 'off'
 		}
 	}]
 };

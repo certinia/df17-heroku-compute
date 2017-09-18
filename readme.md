@@ -1,13 +1,17 @@
 ffdc-df17-heroku-compute
 ===
 
-This repo accompanies the Dreamforce '17 session **Beat Governor Limits By Taking Your Compute Processes to Heroku**.
+This repo accompanies the Dreamforce '17 session **[Beat Governor Limits By Taking Your Compute Processes to Heroku](https://success.salesforce.com/Sessions#/session/a2q3A000001yuLtQAI)**.
 
 It is optimized for development in VisualStudio Code.
 
 Getting Started
 ---
-See the [wiki](https://github.com/financialforcedev/df17-heroku-compute/wiki/Getting-Started) for deployment instructions.
+See the [wiki](https://github.com/financialforcedev/df17-heroku-compute/wiki/Getting-Started) for local development and deployment instructions.
+
+Architecture
+---
+![Architecture](docs/readme/df17-heroku-compute-architecture.gif)
 
 Repository Structure
 ---
