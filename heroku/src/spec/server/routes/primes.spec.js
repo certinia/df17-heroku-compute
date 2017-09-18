@@ -32,6 +32,7 @@ describe('server/routes/primes', () => {
 			body: {
 				accessToken: 'testToken',
 				currentMax: 1,
+				index: 1,
 				count: 2,
 				instanceUrl: 'testUrl',
 				someOtherProperty: 'should be omitted from published message'
@@ -42,7 +43,7 @@ describe('server/routes/primes', () => {
 			send: sandbox.stub(),
 			sendStatus: sandbox.stub()
 		};
-		mocks.stringifiedBody = JSON.stringify(_.pick(mocks.request.body, ['currentMax', 'count', 'accessToken', 'instanceUrl']));
+		mocks.stringifiedBody = JSON.stringify(_.pick(mocks.request.body, ['currentMax', 'index', 'count', 'accessToken', 'instanceUrl']));
 	});
 
 	afterEach(() => {
@@ -68,6 +69,24 @@ describe('server/routes/primes', () => {
 						expect(mocks.response.status).to.be.calledWith(400);
 						expect(mocks.response.send).to.be.calledOnce;
 						expect(mocks.response.send).to.be.calledWith('Missing required parameter: accessToken');
+					});
+			});
+
+			it('index', () => {
+				// given
+				const request = _.omit(mocks.request, 'body.index');
+				mocks.app.post.callsFake((uri, handler) => {
+					return handler(request, mocks.response);
+				});
+
+				// when
+				return PrimesRoute.addRoute(mocks.app)
+					// then
+					.then(() => {
+						expect(mocks.response.status).to.be.calledOnce;
+						expect(mocks.response.status).to.be.calledWith(400);
+						expect(mocks.response.send).to.be.calledOnce;
+						expect(mocks.response.send).to.be.calledWith('Missing required parameter: index');
 					});
 			});
 

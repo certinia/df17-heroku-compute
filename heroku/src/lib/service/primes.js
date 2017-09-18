@@ -5,29 +5,43 @@ const
 	isPrime = require('is-prime'),
 	SalesforceWriter = require('./salesforceWriter');
 
+class Generator {
+
+	static * primes({ currentMax, index }) {
+		// Just iterate through each number greater than the currentMax,
+		while (true) {
+			currentMax++;
+			// if the number is a prime, increment the index, and yield the prime and its index.
+			if (isPrime(currentMax)) {
+				index++;
+				debug('Found prime, val: %s, index: %s', currentMax, index);
+				yield { currentMax, index };
+			}
+		}
+	}
+
+}
+
 class Primes {
+
 	static handle(message) {
 		const
 			// Read the parameters from the message
 			content = message.content,
-			{ currentMax, count, accessToken, instanceUrl } = JSON.parse(content),
+			{ currentMax, index, count, accessToken, instanceUrl } = JSON.parse(content),
+			generator = Generator.primes({ currentMax, index }),
 			records = [],
-			recordsByType = { Prime__c: records }; // eslint-disable-line camelcase
+			recordsByType = {
+				['Prime__c']: records
+			};
 
-		// Just iterate through each number greater than the currentMax,
-		// adding each newly discovered Prime number until we have enough
-		let i = currentMax;
+		// create records until we have as many primes as required
 		while (records.length < count) {
-			i++;
-			// Check primality
-			if (isPrime(i)) {
-				debug('Found prime: %s', i);
-
-				// Create a new Prime__c
-				// TODO: Work out Index__c also.
-				// TODO: Use a generator function
-				records.push({ Value__c: i }); // eslint-disable-line camelcase
-			}
+			const { value: { currentMax, index } } = generator.next();
+			records.push({
+				['Value__c']: currentMax,
+				['Index__c']: index
+			});
 		}
 
 		// If there are any Primes, save them in Force.com
