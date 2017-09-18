@@ -14,8 +14,9 @@ private class PrimesControllerTest
 
 		HttpResponse response = new HttpResponse();
 
-		mocks.stub(selector, 'getCurrentMax', new Type[]{Integer.class}, new Object[]{}, 10);
-		mocks.stub(connector, 'requestPrimes', new Type[]{Integer.class, Integer.class}, new Object[]{5, 10}, response);
+		Prime__c mockPrime =  new Prime__c(Value__c = 11, Index__c = 6);
+		mocks.stub(selector, 'getCurrentMax', new Type[]{Prime__c.class}, new Object[]{}, mockPrime);
+		mocks.stub(connector, 'requestPrimes', new Type[]{Integer.class, Prime__c.class}, new Object[]{5, mockPrime}, response);
 		
 		// when
 		Object actual = PrimesController.requestPrimes(5);

@@ -12,6 +12,7 @@ const
 		return channel.consume(topic, message => {
 			return Promise.resolve()
 				.then(() => {
+					debug('Event handled: %s', message);
 					// Invoke the handler with the message
 					return handler(message);
 				})

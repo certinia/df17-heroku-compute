@@ -7,7 +7,7 @@ const
 
 	{ PRIMES_REQUESTED } = require('../../messaging/topics'),
 	PRIMES_URI = '/primes',
-	REQUIRED_PROPERTIES = ['currentMax', 'count', 'accessToken', 'instanceUrl'],
+	REQUIRED_PROPERTIES = ['currentMax', 'index', 'count', 'accessToken', 'instanceUrl'],
 
 	requestHandler = (request, response) => {
 		const body = _.get(request, 'body', {});
@@ -17,7 +17,7 @@ const
 			.then(() => {
 				// Validate the request body has the expected properties
 				_.each(REQUIRED_PROPERTIES, property => {
-					if (!body[property]) {
+					if (body[property] == null) {
 						throw new Error(`Missing required parameter: ${property}`);
 					}
 				});

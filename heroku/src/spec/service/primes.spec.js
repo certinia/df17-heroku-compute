@@ -1,4 +1,3 @@
-/* eslint-disable camelcase*/
 'use strict';
 
 const
@@ -39,12 +38,19 @@ describe('service/primes', () => {
 	describe('handle', () => {
 
 		it('should call insert with the expected primes', () => {
+
 			// given
 			const
+				primeObjectName = 'Prime__c',
+				prime = (value, index) => ({
+					['Value__c']: value,
+					['Index__c']: index
+				}),
 				content = {
 					accessToken: 'testAccessToken',
 					count: 10,
 					currentMax: 2,
+					index: 1,
 					instanceUrl: 'testInstanceUrl'
 				},
 				message = {
@@ -60,17 +66,17 @@ describe('service/primes', () => {
 				accessToken: content.accessToken,
 				instanceUrl: content.instanceUrl,
 				recordsByType: {
-					Prime__c: isMatch([
-						{ Value__c: 3 },
-						{ Value__c: 5 },
-						{ Value__c: 7 },
-						{ Value__c: 11 },
-						{ Value__c: 13 },
-						{ Value__c: 17 },
-						{ Value__c: 19 },
-						{ Value__c: 23 },
-						{ Value__c: 29 },
-						{ Value__c: 31 }
+					[primeObjectName]: isMatch([
+						prime(3, 2),
+						prime(5, 3),
+						prime(7, 4),
+						prime(11, 5),
+						prime(13, 6),
+						prime(17, 7),
+						prime(19, 8),
+						prime(23, 9),
+						prime(29, 10),
+						prime(31, 11)
 					])
 				}
 			}));
