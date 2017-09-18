@@ -4,10 +4,8 @@ const
 	Amqp = require('../service/amqp'),
 
 	publishAction = ({ topic, message, channel }) => {
-		return Amqp.apply(channel => {
-			// Convert the message into a Buffer and enqueue against the topic
-			return channel.sendToQueue(topic, Buffer.from(message));
-		});
+		// Convert the message into a Buffer and enqueue against the topic
+		return channel.sendToQueue(topic, Buffer.from(message));
 	};
 
 class Publisher {
