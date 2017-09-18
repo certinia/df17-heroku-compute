@@ -1,7 +1,8 @@
 {
 	"recommendations": [
-		alexdima.vscode-lcov,
-		dbaeumer.vscode-eslint,
-		HookyQR.beautify
+		"alexdima.vscode-lcov",
+		"dbaeumer.vscode-eslint",
+		"HookyQR.beautify",
+		"salesforce.salesforcedx-vscode"
 	]
 }
