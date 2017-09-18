@@ -13,9 +13,10 @@ public class PrimeSelector
 		return instance;
 	}
 
-	public Integer getCurrentMax()
+	public Prime__c getCurrentMax()
     {            
-		Decimal max = (Decimal)[SELECT MAX(Value__c) max FROM Prime__c][0].get('max');
-        return max == null ? 0 : Integer.valueOf(max);
+		List<Prime__c> maxPrimes = [SELECT Value__c, Index__c FROM Prime__c ORDER BY Index__c DESC LIMIT 1];
+		Prime__c maxPrime = maxPrimes.size() == 1 ? maxPrimes[0] : null;
+        return maxPrime;
 	}
 }

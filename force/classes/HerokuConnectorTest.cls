@@ -10,13 +10,13 @@ private class HerokuConnectorTest
 		Test.setMock(HttpCalloutMock.class, mock);
 
 		// when
-		connector.requestPrimes(1, 2);
+		connector.requestPrimes(1, new Prime__c(Value__c = 2, Index__c = 3));
 
 		// then
 		System.assertEquals('Bearer ' + UserInfo.getSessionId(), mock.Request.getHeader('Authorization'));
 		System.assertEquals(Url.getSalesforceBaseUrl().toExternalForm(), mock.Request.getHeader('Referer'));
 		System.assertEquals('application/json', mock.Request.getHeader('Content-Type'));
-		System.assertEquals('{"count":1,"currentMax":2}', mock.Request.getBody());
+		System.assertEquals('{"count":1,"currentMax":2,"index":3}', mock.Request.getBody());
 	}
 
 	private class CalloutMock implements HttpCalloutMock

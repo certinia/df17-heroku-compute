@@ -13,13 +13,13 @@ public class HerokuConnector
 		return instance;
 	}
 
-	public Object requestPrimes(Integer count, Integer currentMax)
+	public Object requestPrimes(Integer count, Prime__c currentMax)
     {            
 		Http http = new Http();
  
 	    HttpRequest request = createRequest();
 		populateHeader(request);
-		populateBody(request, count, currentMax);
+		populateBody(request, count, currentMax.Value__c, currentMax.Index__c);
         return http.send(request);
 	}
 
@@ -38,10 +38,11 @@ public class HerokuConnector
         request.setHeader('Content-Type', 'application/json');
 	}
 
-	private static void populateBody(HttpRequest request, Integer count, Integer currentMax)
+	private static void populateBody(HttpRequest request, Integer count, Integer currentMax, Integer index)
 	{
 		Map<String, Object> body = new Map<String, Object>{
             'currentMax' => currentMax,
+			'index' => index,
             'count' => count
         };
         request.setBody(JSON.serialize(body));       

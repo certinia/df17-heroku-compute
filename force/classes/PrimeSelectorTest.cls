@@ -8,41 +8,43 @@ private class PrimeSelectorTest
 		PrimeSelector selector = PrimeSelector.newInstance();
 
 		// when
-		Integer currentMax = selector.getCurrentMax();
+		Prime__c currentMax = selector.getCurrentMax();
 
 		// then
-		System.assertEquals(0, currentMax);
+		System.assertEquals(null, currentMax);
 	}
 
 	@IsTest
 	private static void getCurrentMax_WithOnePrime_ReturnsPrimeValue()
 	{
 		// given
-		insert new Prime__c(Value__c = 19);
+		insert new Prime__c(Value__c = 19, Index__c = 5);
 		PrimeSelector selector = PrimeSelector.newInstance();
 
 		// when
-		Integer currentMax = selector.getCurrentMax();
+		Prime__c currentMax = selector.getCurrentMax();
 
 		// then
-		System.assertEquals(19, currentMax);
+		System.assertEquals(19, currentMax.Value__c);
+		System.assertEquals(5, currentMax.Index__c);
 	}
 
 	@IsTest
-	private static void getCurrentMax_WithManyPrimes_ReturnsMaxPrimeValue()
+	private static void getCurrentMax_WithManyPrimes_ReturnsPrimeValueWithHighestIndex()
 	{
 		// given
 		insert new Prime__c[]{
-			new Prime__c(Value__c = 17),
-			new Prime__c(Value__c = 3),
-			new Prime__c(Value__c = 5)
+			new Prime__c(Value__c = 17, Index__c = 4),
+			new Prime__c(Value__c = 3,  Index__c = 2),
+			new Prime__c(Value__c = 5,  Index__c = 3)
 		};
 		PrimeSelector selector = PrimeSelector.newInstance();
 
 		// when
-		Integer currentMax = selector.getCurrentMax();
+		Prime__c currentMax = selector.getCurrentMax();
 
 		// then
-		System.assertEquals(17, currentMax);
+		System.assertEquals(17, currentMax.Value__c);
+		System.assertEquals(4, currentMax.Index__c);
 	}
 }
