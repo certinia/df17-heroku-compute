@@ -1,0 +1,4 @@
+before_script: cd heroku
+language: node_js
+node_js:
+  - "6"
