@@ -1,0 +1,7 @@
+{
+    "orgName": "DF17 Heroku Compute",
+    "edition": "Developer",
+    "orgPreferences" : {
+        "enabled": ["S1DesktopEnabled"]
+    }
+}
