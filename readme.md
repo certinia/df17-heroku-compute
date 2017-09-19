@@ -7,7 +7,7 @@ It is optimized for development in VisualStudio Code.
 
 Getting Started
 ---
-See the [wiki](https://github.com/financialforcedev/df17-heroku-compute/wiki/Getting-Started) for local development and deployment instructions.
+See the wiki for [local development](https://github.com/financialforcedev/df17-heroku-compute/wiki/Local-Development-Environment) and [deployment](https://github.com/financialforcedev/df17-heroku-compute/wiki/Deployment) instructions.
 
 Architecture
 ---
