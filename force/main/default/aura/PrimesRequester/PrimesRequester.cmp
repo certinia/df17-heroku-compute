@@ -1,10 +1,10 @@
 <aura:component controller="PrimesController" implements="flexipage:availableForAllPageTypes">
-    <aura:attribute name="count" type="integer" default="10" />
-    <lightning:card>
-        <aura:set attribute="title">Generate Primes</aura:set>
-        <aura:set attribute="actions">
-            <lightning:button label="Generate" variant="brand" onclick="{!c.onGenerateClick}" />
-        </aura:set>
-        <ui:inputNumber label="Number of primes" value="{!v.count}" format="" required="true" />
-    </lightning:card>
+	<aura:attribute name="count" type="integer" default="10" />
+	<lightning:card>
+		<aura:set attribute="title">Generate Primes</aura:set>
+		<aura:set attribute="actions">
+			<lightning:button label="Generate" variant="brand" onclick="{!c.onGenerateClick}" />
+		</aura:set>
+		<ui:inputNumber label="Number of primes" value="{!v.count}" format="" required="true" />
+	</lightning:card>
 </aura:component>

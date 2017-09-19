@@ -11,11 +11,11 @@ public class StubProvider implements System.StubProvider
 	private final Map<Method, Object> returnValuesByMethod = new Map<Method, Object>();
 
 	public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, 
-        Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames, 
-        List<Object> listOfArgs)
+		Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames, 
+		List<Object> listOfArgs)
 	{
 		return returnValuesByMethod.get(new Method(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs));
-    }
+	}
 
 	public Object mock(Type mockType)
 	{
