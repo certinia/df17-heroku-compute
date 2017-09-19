@@ -1,4 +1,4 @@
-ffdc-df17-heroku-compute
+ffdc-df17-heroku-compute [![Build Status](https://travis-ci.org/financialforcedev/df17-heroku-compute.svg?branch=master)](https://travis-ci.org/financialforcedev/df17-heroku-compute)
 ===
 
 This repo accompanies the Dreamforce '17 session **[Beat Governor Limits By Taking Your Compute Processes to Heroku](https://success.salesforce.com/Sessions#/session/a2q3A000001yuLtQAI)**.
