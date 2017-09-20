@@ -23,7 +23,7 @@ public class StubProvider implements System.StubProvider
 	}
 
 	public void stub(Object stubbedObject, String stubbedMethodName, List<Type> listOfParamTypes, List<Object> listOfArgs, Object returnValue)
-	{
+	{	
 		returnValuesByMethod.put(new Method(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs), returnValue);
 	}
 
@@ -47,11 +47,11 @@ public class StubProvider implements System.StubProvider
 			if (other instanceof Method)
 			{
 				Method that = (Method)other;
-				return this.stubbedObject === stubbedObject
-					&& this.stubbedMethodName == stubbedMethodName
-					&& this.listOfParamTypes == listOfParamTypes
-					&& this.listOfArgs == listOfArgs;
-			}
+				return this.stubbedObject === that.stubbedObject
+					&& this.stubbedMethodName == that.stubbedMethodName
+					&& this.listOfParamTypes == that.listOfParamTypes
+					&& this.listOfArgs == that.listOfArgs;
+	}
 
 			return false;
 		}
