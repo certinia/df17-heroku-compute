@@ -13,17 +13,21 @@ public class HerokuConnector
 		return instance;
 	}
 
-	public Object requestPrimes(Integer count, Prime__c currentMax)
+	public Object requestPrimes(Integer count, Integer value, Integer index)
 	{			
+		if (count == null || count < 0) {
+			count = 0;
+		}
+		if (value == null || value < 0) {
+			value = 0;
+		}
+		if (index == null || index < 0) {
+			index = 0;
+		}
+
 		Http http = new Http();
-		Integer index = 0, value = 0;
- 
 		HttpRequest request = createRequest();
 		populateHeader(request);
-		if (currentMax != null) {
-			index = (Integer) currentMax.Index__c;
-			value = (Integer) currentMax.Value__c;
-		}
 		populateBody(request, count, value, index);
 		return http.send(request);
 	}

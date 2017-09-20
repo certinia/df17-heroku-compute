@@ -8,13 +8,13 @@
 @IsTest(SeeAllData=false)
 public class StubProvider implements System.StubProvider
 {
-	private final Map<Method, Object> returnValuesByMethod = new Map<Method, Object>();
+	private final Map<Integer, Object> returnValuesByMethod = new Map<Integer, Object>();
 
 	public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, 
 		Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames, 
 		List<Object> listOfArgs)
 	{
-		return returnValuesByMethod.get(new Method(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs));
+		return returnValuesByMethod.get(generateHash(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs));
 	}
 
 	public Object mock(Type mockType)
@@ -23,46 +23,17 @@ public class StubProvider implements System.StubProvider
 	}
 
 	public void stub(Object stubbedObject, String stubbedMethodName, List<Type> listOfParamTypes, List<Object> listOfArgs, Object returnValue)
-	{
-		returnValuesByMethod.put(new Method(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs), returnValue);
+	{	
+		returnValuesByMethod.put(generateHash(stubbedObject, stubbedMethodName, listOfParamTypes, listOfArgs), returnValue);
 	}
 
-	private class Method
-	{
-		private final Object stubbedObject;
-		private final String stubbedMethodName;
-		private final List<Type> listOfParamTypes;
-		private final List<Object> listOfArgs;
-
-		public Method(Object stubbedObject, String stubbedMethodName, List<Type> listOfParamTypes, List<Object> listOfArgs)
-		{
-			this.stubbedObject = stubbedObject;
-			this.stubbedMethodName = stubbedMethodName;
-			this.listOfParamTypes = listOfParamTypes;
-			this.listOfArgs = listOfArgs;
-		}
-
-		public Boolean equals(Object other)
-		{
-			if (other instanceof Method)
-			{
-				Method that = (Method)other;
-				return this.stubbedObject === stubbedObject
-					&& this.stubbedMethodName == stubbedMethodName
-					&& this.listOfParamTypes == listOfParamTypes
-					&& this.listOfArgs == listOfArgs;
-			}
-
-			return false;
-		}
-
-		public Integer hashCode()
-		{
-			String description = ''
-				+ this.stubbedMethodName
-				+ this.listOfParamTypes;
-
-			return description.hashCode();
-		}
+	private Integer generateHash(Object stubbedObject, String stubbedMethodName, List<Type> listOfParamTypes, List<Object> listOfArgs) {
+		String objectType = ('' + stubbedObject).split(':')[0];
+		String hashString = objectType
+			+ stubbedMethodName
+			+ listOfParamTypes
+			+ listOfArgs;
+		return hashString.hashCode();
 	}
+
 }
