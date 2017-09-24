@@ -1,6 +1,6 @@
 scratch-org-def: config/project-scratch-def.json
 assign-permset: true
-permset-name: Primes
+permset-name: primes
 run-apex-tests: true
 delete-scratch-org: false
 show-scratch-org-url: true

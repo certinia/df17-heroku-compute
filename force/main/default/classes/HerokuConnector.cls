@@ -15,13 +15,13 @@ public class HerokuConnector
 
 	public Object requestPrimes(Integer count, Integer value, Integer index)
 	{			
-		if (count == null || count < 0) {
+		if (count == null || Integer.valueOf(count) < 0) {
 			count = 0;
 		}
-		if (value == null || value < 0) {
+		if (value == null || Integer.valueOf(value) < 0) {
 			value = 0;
 		}
-		if (index == null || index < 0) {
+		if (index == null || Integer.valueOf(index) < 0) {
 			index = 0;
 		}
 
