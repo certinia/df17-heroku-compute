@@ -19,7 +19,15 @@ Why might you want to build such an app? I'm glad you asked! Heroku does what fo
 
 Getting Started
 ---
-See the wiki for [local development](https://github.com/financialforcedev/df17-heroku-compute/wiki/Local-Development-Environment) and [deployment](https://github.com/financialforcedev/df17-heroku-compute/wiki/Deployment) instructions.
+
+Deploy the Salesforce and Heroku components of the app using the buttons below.
+
+*Important! Remember to change the Named Credential endpoint to match your newly created Heroku app (e.g. https://my-app-123.herokuapp.com).*
+
+[![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+Or if you want to get your hands dirty... see the wiki for [local development](https://github.com/financialforcedev/df17-heroku-compute/wiki/Local-Development-Environment) and [manual deployment](https://github.com/financialforcedev/df17-heroku-compute/wiki/Deployment) instructions.
 
 Architecture
 ---
