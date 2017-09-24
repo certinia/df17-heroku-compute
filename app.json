@@ -1,8 +1,27 @@
 {
 	"name": "ffdc-df17-heroku-compute",
-	"scripts": {},
-	"formation": {},
-	"addons": [],
+	"description": "Heroku component of Primes sample app demonstrating apps that span Force.com and Heroku",
+	"repository": "https://github.com/financialforcedev/df17-heroku-compute",
+	"success": "https://github.com/financialforcedev/df17-heroku-compute",
+	"formation": {
+		"web": {
+			"quantity": 1,
+			"size": "free"
+		},
+		"worker": {
+			"quantity": 1,
+			"size": "free"
+		}
+	},
+	"env": {
+		"DEBUG": {
+			"description": "Debug log filter.",
+			"value": "*"
+		}
+	},
+	"addons": [
+		"cloudamqp"
+	],
 	"buildpacks": [{
 		"url": "heroku/nodejs"
 	}]
