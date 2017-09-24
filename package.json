@@ -3,10 +3,10 @@
 	"version": "0.0.0",
 	"description": "Node component of Force.com-Heroku App",
 	"scripts": {
-		"pretest": "eslint src",
-		"test": "nyc mocha --recursive src/spec"
+		"pretest": "eslint heroku/src",
+		"test": "nyc mocha --recursive heroku/src/spec"
 	},
-	"main": "src/lib/web.js",
+	"main": "heroku/src/lib/web.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/financialforcedev/df17-heroku-compute"
@@ -45,7 +45,7 @@
 		"functions": 100,
 		"branches": 100,
 		"include": [
-			"src"
+			"heroku/src"
 		],
 		"reporter": [
 			"lcov",
