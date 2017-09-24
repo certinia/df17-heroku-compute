@@ -1,4 +1,3 @@
-before_script: cd heroku && npm i
 language: node_js
 node_js:
   - "6"
