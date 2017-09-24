@@ -1,2 +1,2 @@
-web: node ./src/lib/web.js
-worker: node ./src/lib/worker.js
+web: node ./heroku/src/lib/web.js
+worker: node ./heroku/src/lib/worker.js
