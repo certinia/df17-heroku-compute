@@ -1,4 +1,24 @@
-({
+({	
+	/*
+	 * Displays toast notifications on receiving PageLayoutUpdate__e events
+	 */
+	handleMonitoredEvent: function (event) {
+		var platformEvent = event.getParam('event'),
+			toast = $A.get("e.force:showToast"),
+			eventData = JSON.parse(platformEvent.data.payload.EventData__c),
+			type = eventData.type,
+			message = eventData.message;
+
+		toast.setParams({
+			message: message,
+			type: type
+		});
+		toast.fire();
+	},
+
+	/*
+	 * Instigate a request to the Heroku app
+	 */
 	requestPrimes: function (component) {
 		var action = component.get('c.requestPrimes');
 

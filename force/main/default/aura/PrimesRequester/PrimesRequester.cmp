@@ -1,5 +1,15 @@
 <aura:component controller="PrimesController" implements="flexipage:availableForAllPageTypes">
+
+	<!-- Event monitor (displays results of async operations) -->
+	<c:EventMonitor eventSubscriptions="['PrimeEvent__e']"/>
+
+	<!-- Handler for component events raised by the EventMonitor -->
+	<aura:handler name="monitoredEvent" event="c:monitoredEvent" action="{!c.onMonitoredEvent}"/>
+
+	<!-- Number of Primes to generate -->
 	<aura:attribute name="count" type="integer" default="10" />
+
+	<!-- Component body -->
 	<lightning:card>
 		<aura:set attribute="title">Generate Primes</aura:set>
 		<aura:set attribute="actions">
