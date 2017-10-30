@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AuraDefinitionBundle xmlns="urn:metadata.tooling.soap.sforce.com" fqn="MonitoredEvent">
-    <apiVersion>40.0</apiVersion>
+    <apiVersion>41.0</apiVersion>
     <description>Propagates platform events received by the EventMonitor</description>
 </AuraDefinitionBundle>
