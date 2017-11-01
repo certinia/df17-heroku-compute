@@ -3,7 +3,10 @@
 const
 	debug = require('debug-plus')('df17~heroku~compute:service:primes'),
 	isPrime = require('is-prime'),
-	SalesforceWriter = require('./salesforceWriter');
+	SalesforceWriter = require('./salesforceWriter'),
+
+	SOBJECT_TYPE_PRIME = 'Prime__c',
+	SOBJECT_TYPE_PRIME_EVENT = 'PrimeEvent__e';
 
 class Generator {
 
@@ -30,26 +33,53 @@ class Primes {
 			content = message.content,
 			{ currentMax, index, count, accessToken, instanceUrl } = JSON.parse(content),
 			generator = Generator.primes({ currentMax, index }),
-			records = [],
-			recordsByType = {
-				['Prime__c']: records
+			primes = [],
+
+			insertPrimeEvent = ({ type, message }) => {
+				return SalesforceWriter.insert({
+					accessToken,
+					instanceUrl,
+					bulk: false,
+					objectType: SOBJECT_TYPE_PRIME_EVENT,
+					records: {
+						['EventData__c']: JSON.stringify({ type, message })
+					}
+				});
+			},
+
+			insertPrimes = records => {
+				return SalesforceWriter.insert({
+					accessToken,
+					instanceUrl,
+					bulk: true,
+					objectType: SOBJECT_TYPE_PRIME,
+					records
+				});
 			};
 
-		// create records until we have as many primes as required
-		while (records.length < count) {
+		// Create records until we have as many primes as required
+		while (primes.length < count) {
 			const { value: { currentMax, index } } = generator.next();
-			records.push({
+			primes.push({
 				['Value__c']: currentMax,
 				['Index__c']: index
 			});
 		}
 
-		// If there are any Primes, save them in Force.com
-		if (records.length) {
-			SalesforceWriter.insert({ accessToken, instanceUrl, recordsByType });
+		// Exit early if there are no primes
+		if (!primes.length) {
+			return Promise.resolve();
 		}
-	}
 
+		// Write primes, with a platform event before and after to inform user of progress
+		return insertPrimeEvent({ type: 'Info', message: `Starting to insert ${count} prime number(/s)` })
+			.then(() => insertPrimes(primes))
+			.then(() => insertPrimeEvent({ type: 'Success', message: `Successfully inserted ${count} prime number(/s)` }))
+			.catch(error => {
+				debug(error);
+				insertPrimeEvent({ type: 'Error', message: `Error inserting ${count} prime number(/s)` });
+			});
+	}
 }
 
 module.exports = Primes;
