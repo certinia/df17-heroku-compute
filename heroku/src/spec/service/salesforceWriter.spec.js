@@ -1,7 +1,6 @@
 'use strict';
 
 const
-	_ = require('lodash'),
 	chai = require('chai'),
 	chaiAsPromised = require('chai-sinon'),
 	chaiSinon = require('chai-sinon'),
@@ -14,25 +13,7 @@ const
 	mocks = {},
 
 	sandbox = sinon.sandbox.create(),
-	expect = chai.expect,
-	match = sandbox.match,
-
-	isMatch = expected => {
-		return match(actual => {
-			return _.isMatch(actual, expected);
-		}, `Expected: ${expected}`);
-	},
-
-	createSObjects = (fieldName, count) => {
-		const result = [];
-		_.times(count, index => {
-			result.push({
-				[fieldName]: index
-			});
-		});
-
-		return result;
-	};
+	expect = chai.expect;
 
 chai.use(chaiSinon);
 chai.use(chaiAsPromised);
@@ -41,11 +22,15 @@ describe('service/salesforceWriter', () => {
 
 	beforeEach(() => {
 		const Connection = jsforce.Connection;
+		mocks.SObject = {
+			insert: sandbox.stub().yields(null, 'Success'),
+			insertBulk: sandbox.stub().yields(null, 'Success')
+		};
 		mocks.Connection = {
 			create: sandbox.spy(Connection.prototype, 'create'),
-			sobject: sandbox.stub(Connection.prototype, 'sobject').returnsThis(),
-			insert: sandbox.stub(Connection.prototype, 'insert').resolves()
+			sobject: sandbox.stub(Connection.prototype, 'sobject').returns(mocks.SObject)
 		};
+
 	});
 
 	afterEach(() => {
@@ -54,54 +39,49 @@ describe('service/salesforceWriter', () => {
 
 	describe('insert', () => {
 
-		it('should not insert if no records supplied', () => {
+		it('should resolve on successful insert', () => {
 			// given
-			const info = {
-				accessToken: 'testAccessToken',
-				instanceUrl: 'testInstanceUrl',
-				recordsByType: {}
-			};
+			const
+				record = { testField: 'testValue' },
+				info = {
+					accessToken: 'testAccessToken',
+					instanceUrl: 'testInstanceUrl',
+					bulk: false,
+					objectType: 'testObject',
+					records: record
+				};
 
-			// when
+			// when - then
 			return expect(SalesforceWriter.insert(info))
 				.to.eventually.be.fulfilled
-				// then
 				.then(() => {
-					expect(mocks.Connection.sobject).notCalled;
-					expect(mocks.Connection.insert).notCalled;
+					expect(mocks.Connection.sobject).calledOnce;
+					expect(mocks.Connection.sobject).calledWith('testObject');
+					expect(mocks.SObject.insert).calledOnce;
+					expect(mocks.SObject.insert).calledWith(record);
 				});
 		});
 
-		it('should chunk records by type and batch size', () => {
+		it('should resolve on successful bulk insert', () => {
 			// given
-			const info = {
-				accessToken: 'testAccessToken',
-				instanceUrl: 'testInstanceUrl',
-				recordsByType: {
-					objectTypeA: createSObjects('fieldA', 20),
-					objectTypeB: createSObjects('fieldB', 5)
-				}
-			};
+			const
+				record = { testField: 'testValue' },
+				info = {
+					accessToken: 'testAccessToken',
+					instanceUrl: 'testInstanceUrl',
+					bulk: true,
+					objectType: 'testObject',
+					records: record
+				};
 
-			// when
+			// when - then
 			return expect(SalesforceWriter.insert(info))
 				.to.eventually.be.fulfilled
-				// then
 				.then(() => {
-					expect(mocks.Connection.sobject).calledThrice;
-					expect(mocks.Connection.sobject).calledWith('objectTypeA');
-					expect(mocks.Connection.sobject).calledWith('objectTypeB');
-					expect(mocks.Connection.insert).calledThrice;
-					expect(mocks.Connection.insert).calledWith(isMatch([
-						{ fieldA: 0 }, { fieldA: 1 }, { fieldA: 2 }, { fieldA: 3 }, { fieldA: 4 }, { fieldA: 5 }, { fieldA: 6 }, { fieldA: 7 }, { fieldA: 8 }, { fieldA: 9 }
-					]));
-					expect(mocks.Connection.insert).calledWith(isMatch([
-						{ fieldA: 10 }, { fieldA: 11 }, { fieldA: 12 }, { fieldA: 13 }, { fieldA: 14 }, { fieldA: 15 }, { fieldA: 16 }, { fieldA: 17 }, { fieldA: 18 }, { fieldA: 19 }
-					]));
-					expect(mocks.Connection.insert).calledWith(isMatch([
-						{ fieldB: 0 }, { fieldB: 1 }, { fieldB: 2 }, { fieldB: 3 }, { fieldB: 4 }
-					]));
-
+					expect(mocks.Connection.sobject).calledOnce;
+					expect(mocks.Connection.sobject).calledWith('testObject');
+					expect(mocks.SObject.insertBulk).calledOnce;
+					expect(mocks.SObject.insertBulk).calledWith(record);
 				});
 		});
 
@@ -109,47 +89,77 @@ describe('service/salesforceWriter', () => {
 
 			it('on sobject', () => {
 				// given
-				const info = {
-					accessToken: 'testAccessToken',
-					instanceUrl: 'testInstanceUrl',
-					recordsByType: { testObject: [{ testField: 'testValue' }] }
-				};
+				const
+					record = { testField: 'testValue' },
+					info = {
+						accessToken: 'testAccessToken',
+						instanceUrl: 'testInstanceUrl',
+						bulk: false,
+						objectType: 'testObject',
+						records: record
+					};
 
-				mocks.Connection.sobject.rejects();
+				mocks.Connection.sobject.rejects(new Error('Bad'));
 
-				// when
+				// when - then
 				return expect(SalesforceWriter.insert(info))
-					.to.eventually.be.fulfilled
-					// then
+					.to.eventually.be.rejectedWith('Bad')
 					.then(() => {
 						expect(mocks.Connection.sobject).calledOnce;
 						expect(mocks.Connection.sobject).calledWith('testObject');
-						expect(mocks.Connection.insert).notCalled;
+						expect(mocks.SObject.insert).notCalled;
 					});
 			});
 
 			it('on insert', () => {
 				// given
-				const info = {
-					accessToken: 'testAccessToken',
-					instanceUrl: 'testInstanceUrl',
-					recordsByType: { testObject: [{ testField: 'testValue' }] }
-				};
+				const
+					record = { testField: 'testValue' },
+					info = {
+						accessToken: 'testAccessToken',
+						instanceUrl: 'testInstanceUrl',
+						bulk: false,
+						objectType: 'testObject',
+						records: record
+					};
 
-				mocks.Connection.insert.rejects();
+				mocks.SObject.insert.yields('Bad');
 
-				// when
+				// when - then
 				return expect(SalesforceWriter.insert(info))
-					.to.eventually.be.fulfilled
-					// then
+					.to.eventually.be.rejectedWith('Bad')
 					.then(() => {
 						expect(mocks.Connection.sobject).calledOnce;
 						expect(mocks.Connection.sobject).calledWith('testObject');
-						expect(mocks.Connection.insert).calledOnce;
-						expect(mocks.Connection.insert).calledWith(isMatch([{ testField: 'testValue' }]));
+						expect(mocks.SObject.insert).calledOnce;
+						expect(mocks.SObject.insert).calledWith(record);
 					});
 			});
 
+			it('on insertBulk', () => {
+				// given
+				const
+					record = { testField: 'testValue' },
+					info = {
+						accessToken: 'testAccessToken',
+						instanceUrl: 'testInstanceUrl',
+						bulk: true,
+						objectType: 'testObject',
+						records: record
+					};
+
+				mocks.SObject.insertBulk.yields('Bad');
+
+				// when - then
+				return expect(SalesforceWriter.insert(info))
+					.to.eventually.be.rejectedWith('Bad')
+					.then(() => {
+						expect(mocks.Connection.sobject).calledOnce;
+						expect(mocks.Connection.sobject).calledWith('testObject');
+						expect(mocks.SObject.insertBulk).calledOnce;
+						expect(mocks.SObject.insertBulk).calledWith(record);
+					});
+			});
 		});
 	});
 });
