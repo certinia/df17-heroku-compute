@@ -51,7 +51,7 @@ describe('service/amqp', () => {
 
 	describe('apply', () => {
 
-		describe('should handles error', () => {
+		describe('should handle error', () => {
 
 			it('from amqp.connect', () => {
 				// given
