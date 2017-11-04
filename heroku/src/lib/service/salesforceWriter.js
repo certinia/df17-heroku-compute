@@ -1,7 +1,6 @@
 'use strict';
 
 const
-	_ = require('lodash'),
 	jsforce = require('jsforce'),
 
 	POLL_TIMEOUT = 60000;
@@ -24,10 +23,10 @@ class SalesforceWriter {
 						} else {
 							resolve(result);
 						}
-					}
+					};
 
 					if (bulk) {
-						sobject.insertBulk(records, callback)
+						sobject.insertBulk(records, callback);
 					} else {
 						sobject.insert(records, callback);
 					}
