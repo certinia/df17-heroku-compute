@@ -1,54 +1,37 @@
 'use strict';
 
 const
-	_ = require('lodash'),
-	debug = require('debug-plus')('df17~heroku~compute:service:salesforceWriter'),
 	jsforce = require('jsforce'),
 
-	BATCH_SIZE = 10,
-
-	batchRecords = recordsByType => {
-		return _.reduce(recordsByType, (result, allRecordsForType, objectType) => {
-			const
-				batches = _.chunk(allRecordsForType, BATCH_SIZE),
-				batchesWithObjectType = _.map(batches, records => {
-					return { objectType, records };
-				});
-
-			result.push(...batchesWithObjectType);
-			return result;
-		}, []);
-	};
+	POLL_TIMEOUT = 60000;
 
 class SalesforceWriter {
 	static insert(info) {
-		const
-			/* beautify ignore:start */
-			{ accessToken, instanceUrl, recordsByType } = info,
-			/* beautify ignore:end */
-			batches = batchRecords(recordsByType);
+		const { accessToken, instanceUrl, records, objectType, bulk } = info;
 
-		let connection;
+		return Promise
+			.resolve(new jsforce.Connection({ accessToken, instanceUrl }))
+			.then(connection => {
+				connection.bulk.pollTimeout = POLL_TIMEOUT;
+				return connection.sobject(objectType);
+			})
+			.then(sobject => {
+				return new Promise((resolve, reject) => {
+					const callback = (error, result) => {
+						if (error) {
+							reject(error);
+						} else {
+							resolve(result);
+						}
+					};
 
-		if (batches.length) {
-			// Create a Connection to the Force.com
-			connection = new jsforce.Connection({
-				instanceUrl,
-				accessToken
+					if (bulk) {
+						sobject.insertBulk(records, callback);
+					} else {
+						sobject.insert(records, callback);
+					}
+				});
 			});
-
-			// Perform inserts in Salesforce
-			return Promise.all(_.map(batches, batch => {
-				return connection
-					.sobject(batch.objectType)
-					.insert(batch.records)
-					.catch(error => {
-						debug(error);
-					});
-			}));
-		}
-
-		return Promise.resolve();
 	}
 }
 

@@ -3,6 +3,7 @@
 const
 	_ = require('lodash'),
 	chai = require('chai'),
+	chaiAsPromised = require('chai-as-promised'),
 	chaiSinon = require('chai-sinon'),
 	sinon = require('sinon'),
 	SalesforceWriter = require('../../lib/service/salesforceWriter'),
@@ -21,13 +22,14 @@ const
 		}, `Expected: ${expected}`);
 	};
 
+chai.use(chaiAsPromised);
 chai.use(chaiSinon);
 
 describe('service/primes', () => {
 
 	beforeEach(() => {
 		mocks.SalesforceWriter = {
-			insert: sandbox.stub(SalesforceWriter, 'insert')
+			insert: sandbox.stub(SalesforceWriter, 'insert').resolves()
 		};
 	});
 
@@ -41,7 +43,6 @@ describe('service/primes', () => {
 
 			// given
 			const
-				primeObjectName = 'Prime__c',
 				prime = (value, index) => ({
 					['Value__c']: value,
 					['Index__c']: index
@@ -57,29 +58,112 @@ describe('service/primes', () => {
 					content: JSON.stringify(content)
 				};
 
-			// when
-			PrimesService.handle(message);
+			// when - then
+			return expect(PrimesService.handle(message))
+				.to.eventually.be.fulfilled
+				.then(() => {
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledThrice;
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						objectType: 'PrimeEvent__e',
+						records: {
+							['EventData__c']: JSON.stringify({ type: 'Info', message: 'Starting to insert 10 prime number(/s)' })
+						}
+					}));
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						bulk: true,
+						objectType: 'Prime__c',
+						records: isMatch([
+							prime(3, 2),
+							prime(5, 3),
+							prime(7, 4),
+							prime(11, 5),
+							prime(13, 6),
+							prime(17, 7),
+							prime(19, 8),
+							prime(23, 9),
+							prime(29, 10),
+							prime(31, 11)
+						])
+					}));
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						objectType: 'PrimeEvent__e',
+						records: {
+							['EventData__c']: JSON.stringify({ type: 'Success', message: 'Successfully inserted 10 prime number(/s)' })
+						}
+					}));
+				});
+		});
 
-			// then
-			expect(mocks.SalesforceWriter.insert).to.have.been.calledOnce;
-			expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
-				accessToken: content.accessToken,
-				instanceUrl: content.instanceUrl,
-				recordsByType: {
-					[primeObjectName]: isMatch([
-						prime(3, 2),
-						prime(5, 3),
-						prime(7, 4),
-						prime(11, 5),
-						prime(13, 6),
-						prime(17, 7),
-						prime(19, 8),
-						prime(23, 9),
-						prime(29, 10),
-						prime(31, 11)
-					])
-				}
-			}));
+		it('should log error and raise a platform event on inserting Primes', () => {
+
+			// given
+			const
+				prime = (value, index) => ({
+					['Value__c']: value,
+					['Index__c']: index
+				}),
+				content = {
+					accessToken: 'testAccessToken',
+					count: 10,
+					currentMax: 2,
+					index: 1,
+					instanceUrl: 'testInstanceUrl'
+				},
+				message = {
+					content: JSON.stringify(content)
+				};
+
+			mocks.SalesforceWriter.insert
+				.onFirstCall().resolves()
+				.onSecondCall().rejects() //Error on the second call (i.e. to insert Primes)
+				.resolves();
+
+			// when - then
+			return expect(PrimesService.handle(message))
+				.to.eventually.be.fulfilled
+				.then(() => {
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledThrice;
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						objectType: 'PrimeEvent__e',
+						records: {
+							['EventData__c']: JSON.stringify({ type: 'Info', message: 'Starting to insert 10 prime number(/s)' })
+						}
+					}));
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						bulk: true,
+						objectType: 'Prime__c',
+						records: isMatch([
+							prime(3, 2),
+							prime(5, 3),
+							prime(7, 4),
+							prime(11, 5),
+							prime(13, 6),
+							prime(17, 7),
+							prime(19, 8),
+							prime(23, 9),
+							prime(29, 10),
+							prime(31, 11)
+						])
+					}));
+					expect(mocks.SalesforceWriter.insert).to.have.been.calledWith(match({
+						accessToken: content.accessToken,
+						instanceUrl: content.instanceUrl,
+						objectType: 'PrimeEvent__e',
+						records: {
+							['EventData__c']: JSON.stringify({ type: 'Error', message: 'Error inserting 10 prime number(/s)' })
+						}
+					}));
+				});
 		});
 
 		it('should not call insert when there are no primes to generate', () => {
@@ -95,11 +179,12 @@ describe('service/primes', () => {
 					content: JSON.stringify(content)
 				};
 
-			// when
-			PrimesService.handle(message);
-
-			// then
-			expect(mocks.SalesforceWriter.insert).to.have.been.notCalled;
+			// when - then
+			return expect(PrimesService.handle(message))
+				.to.eventually.be.fulfilled
+				.then(() => {
+					expect(mocks.SalesforceWriter.insert).to.have.been.notCalled;
+				});
 		});
 
 	});

@@ -2,11 +2,16 @@
 	connectCometd: function (component) {
 		var cometd = component.get('v.cometd'),
 			location = window.location,
-			cometdUrl = location.protocol + '//' + location.hostname + '/cometd/41.0/';
+			cometdUrl = location.protocol + '//' + location.hostname + '/cometd/41.0/',
+			isConnected = component.get('v.isConnected');
+
+		if (isConnected) {
+			return;
+		}
 
 		cometd.configure({
 			url: cometdUrl,
-			requestHeaders: { Authorization: 'OAuth ' + component.get('v.sessionId')},
+			requestHeaders: { Authorization: 'OAuth ' + component.get('v.sessionId') },
 			appendMessageTypeToURL: false
 		});
 
@@ -41,6 +46,9 @@
 		window.addEventListener('unload', function (event) {
 			helper.disconnectCometd(component);
 		});
+
+		// Prevent subsequent connection attempts
+		component.set('v.isConnected', true);
 	},
 
 	disconnectCometd: function (component) {
