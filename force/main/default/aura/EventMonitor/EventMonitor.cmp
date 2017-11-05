@@ -1,14 +1,14 @@
 <aura:component controller="EventMonitorController">
 
-    <aura:registerEvent name="monitoredEvent" type="c:monitoredEvent" />
+	<aura:registerEvent name="monitoredEvent" type="c:monitoredEvent"/>
 
-    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
-    <ltng:require scripts="{!$Resource.cometd}" afterScriptsLoaded="{!c.onCometdLoaded}" />
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+	<ltng:require scripts="{!$Resource.cometd}" afterScriptsLoaded="{!c.onCometdLoaded}"/>
 
-    <aura:attribute name="isConnected" type="Boolean" />
-    <aura:attribute name="sessionId" type="String" />
-    <aura:attribute name="cometd" type="Object" />
-    <aura:attribute name="cometdSubscriptions" type="Object[]" default="[]" />
-    <aura:attribute name="eventSubscriptions" type="String[]" required="true" description="Array of platform event SObjectTypes you want to monitor" />
+	<aura:attribute name="isConnected" type="Boolean"/>
+	<aura:attribute name="sessionId" type="String"/>
+	<aura:attribute name="cometd" type="Object"/>
+	<aura:attribute name="cometdSubscriptions" type="Object[]" default="[]"/>
+	<aura:attribute name="eventSubscriptions" type="String[]" required="true" description="Array of platform event SObjectTypes you want to monitor"/>
 
 </aura:component>
