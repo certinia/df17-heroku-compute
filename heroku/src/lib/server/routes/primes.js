@@ -52,7 +52,7 @@ const
 			await Publisher.publish(PRIMES_REQUESTED, JSON.stringify(messageBody));
 
 			// Send a success response
-			await response.sendStatus(200);
+			return await response.sendStatus(200);
 		} catch (error) {
 			const errorMessage = error.message;
 
@@ -60,7 +60,7 @@ const
 			debug.error(errorMessage);
 
 			// Send an error response
-			await response.status(400).send(errorMessage);
+			return await response.status(400).send(errorMessage);
 		}
 	};
 
