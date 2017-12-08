@@ -53,14 +53,13 @@ class Generator {
 
 class Primes {
 
-	static handle(message) {
+	static async handle(message) {
 		const
 			// Read the parameters from the message
 			content = message.content,
 			{ currentMax, index, count, accessToken, instanceUrl } = JSON.parse(content),
 			generator = Generator.primes({ currentMax, index }),
 			primes = [],
-
 			insertPrimeEvent = ({ type, message }) => {
 				return SalesforceWriter.insert({
 					accessToken,
@@ -72,7 +71,6 @@ class Primes {
 					}
 				});
 			},
-
 			insertPrimes = records => {
 				return SalesforceWriter.insert({
 					accessToken,
@@ -92,19 +90,17 @@ class Primes {
 			});
 		}
 
-		// Exit early if there are no primes
-		if (!primes.length) {
-			return Promise.resolve();
+		if (primes.length) {
+			try {
+				await insertPrimeEvent({ type: 'Info', message: `Starting to insert ${count} prime number(/s)` });
+				await insertPrimes(primes);
+				await insertPrimeEvent({ type: 'Success', message: `Successfully inserted ${count} prime number(/s)` });
+			} catch (error) {
+				debug(error);
+				await insertPrimeEvent({ type: 'Error', message: `Error inserting ${count} prime number(/s)` });
+			}
 		}
 
-		// Write primes, with a platform event before and after to inform user of progress
-		return insertPrimeEvent({ type: 'Info', message: `Starting to insert ${count} prime number(/s)` })
-			.then(() => insertPrimes(primes))
-			.then(() => insertPrimeEvent({ type: 'Success', message: `Successfully inserted ${count} prime number(/s)` }))
-			.catch(error => {
-				debug(error);
-				insertPrimeEvent({ type: 'Error', message: `Error inserting ${count} prime number(/s)` });
-			});
 	}
 }
 
