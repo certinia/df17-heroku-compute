@@ -35,39 +35,33 @@ const
 	PRIMES_URI = '/primes',
 	REQUIRED_PROPERTIES = ['currentMax', 'index', 'count', 'accessToken', 'instanceUrl'],
 
-	requestHandler = (request, response) => {
-		const body = _.get(request, 'body', {});
+	requestHandler = async (request, response) => {
+		try {
+			const
+				body = _.get(request, 'body', {}),
+				messageBody = _.pick(body, REQUIRED_PROPERTIES);
 
-		return Promise
-			.resolve()
-			.then(() => {
-				// Validate the request body has the expected properties
-				_.each(REQUIRED_PROPERTIES, property => {
-					if (body[property] == null) {
-						throw new Error(`Missing required parameter: ${property}`);
-					}
-				});
-
-				// Create a message by converting the body into a JSON String
-				return JSON.stringify(_.pick(body, REQUIRED_PROPERTIES));
-			})
-			.then(message => {
-				// Publish the message
-				return Publisher.publish(PRIMES_REQUESTED, message);
-			})
-			.then(() => {
-				// Send a success response
-				response.sendStatus(200);
-			})
-			.catch(error => {
-				const errorMessage = error.message;
-
-				// Log the error
-				debug.error(errorMessage);
-
-				// Send an error response
-				response.status(400).send(errorMessage);
+			// Validate the request body has the expected properties
+			_.each(REQUIRED_PROPERTIES, property => {
+				if (messageBody[property] == null) {
+					throw new Error(`Missing required parameter: ${property}`);
+				}
 			});
+
+			// Publish the message
+			await Publisher.publish(PRIMES_REQUESTED, JSON.stringify(messageBody));
+
+			// Send a success response
+			await response.sendStatus(200);
+		} catch (error) {
+			const errorMessage = error.message;
+
+			// Log the error
+			debug.error(errorMessage);
+
+			// Send an error response
+			await response.status(400).send(errorMessage);
+		}
 	};
 
 class Primes {
