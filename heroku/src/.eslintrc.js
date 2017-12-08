@@ -425,7 +425,11 @@ module.exports = {
 		'prefer-arrow-callback': 'warn',
 
 		// require const declarations for variables that are never reassigned after declared
-		'prefer-const': 'warn'
+		'prefer-const': 'warn',
+
+		'parserOptions': {
+			'ecmaVersion': 2017
+		}
 
 	},
 	overrides: [{
