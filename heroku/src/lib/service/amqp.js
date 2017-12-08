@@ -28,43 +28,31 @@
 
 const
 	amqp = require('amqplib'),
-	debug = require('debug-plus')('df17~heroku~compute:service:amqp'),
-
-	logError = error => {
-		debug('Error: %s', error.message);
-	};
+	debug = require('debug-plus')('df17~heroku~compute:service:amqp');
 
 let connection;
 
 class Amqp {
-	static apply(action) {
-		const url = process.env.CLOUDAMQP_URL || 'amqp://localhost';
+	static async apply(action) {
+		try {
+			// Read the AMQP URL
+			const url = process.env.CLOUDAMQP_URL || 'amqp://localhost';
 
-		return Promise.resolve()
-			.then(() => {
-				// Use the connection if created earlier
-				// (lazy loading)
-				if (connection) {
-					return connection;
-				}
+			// Create a new RabbitMQ connection if there isn't one already
+			// (lazy loading)
+			if (!connection) {
+				connection = await amqp.connect(url);
+			}
 
-				// Create a new RabbitMQ connection
-				return amqp.connect(url)
-					.then(newConnection => {
-						connection = newConnection;
-						return connection;
-					});
-			})
-			.then(connection => {
-				// Create a RabbitMQ channel
-				return connection.createChannel();
-			})
-			.then(channel => {
-				// Invoke the action callback on the
-				// new channel 
-				return action(channel);
-			})
-			.catch(logError);
+			// Create a RabbitMQ channel
+			const channel = await connection.createChannel();
+
+			// Invoke the action callback on the new channel 
+			return await action(channel);
+		} catch (error) {
+			// Log out the error
+			debug('Error: %s', error.message);
+		}
 	}
 }
 
