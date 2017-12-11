@@ -30,16 +30,16 @@ const
 	Amqp = require('../service/amqp'),
 	debug = require('debug-plus')('df17~heroku~compute:messaging:publisher'),
 
-	publishAction = async ({ topic, message, channel }) => {
+	publishAction = ({ topic, message, channel }) => {
 		// Convert the message into a Buffer and enqueue against the topic
-		return await channel.sendToQueue(topic, Buffer.from(message));
+		return channel.sendToQueue(topic, Buffer.from(message));
 	};
 
 class Publisher {
-	static async publish(topic, message) {
+	static publish(topic, message) {
 		debug('publishing to: %s, message: %s', topic, message);
 		// Opens a connection to the RabbitMQ server, and publish the message
-		return await Amqp.apply(channel => publishAction({ topic, message, channel }));
+		return Amqp.apply(channel => publishAction({ topic, message, channel }));
 	}
 }
 
