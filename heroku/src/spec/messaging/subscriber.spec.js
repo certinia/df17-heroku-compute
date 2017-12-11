@@ -70,9 +70,7 @@ describe('messaging/subscriber', () => {
 				topic = 'TestTopic',
 				message = 'TestMessage';
 
-			mocks.channel.consume.callsFake((topic, callback) => {
-				return callback(message);
-			});
+			mocks.channel.consume.yields(undefined, message);
 			mocks.handler.resolves();
 			mocks.Amqp.apply.callsFake(action => {
 				return Promise.resolve(action(mocks.channel));
@@ -102,9 +100,7 @@ describe('messaging/subscriber', () => {
 				topic = 'TestTopic',
 				message = 'TestMessage';
 
-			mocks.channel.consume.callsFake((topic, callback) => {
-				return callback(message);
-			});
+			mocks.channel.consume.yields(undefined, message);
 			mocks.handler.rejects();
 			mocks.Amqp.apply.callsFake(action => {
 				return Promise.resolve(action(mocks.channel));
